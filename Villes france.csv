@@ -1,1 +1,11 @@
-
+nom_commune,code_postal,latitude,longitude,zone_referente,lien_actu,lien_tourisme
+Aix-en-Provence,13090,43.5297,5.4474,Aix-Marseille-50km,https://www.aixenprovence.fr/Actualites,https://www.aixenprovence-tourisme.com
+Marseille,13001,43.2965,5.3698,Aix-Marseille-50km,https://www.marseille.fr/actualites,https://www.marseille-tourisme.com
+Arras,62000,50.2910,2.7775,Pas-de-Calais-100km,https://www.arras.fr/fr/actualites,https://www.explorearras.com
+Strasbourg,67000,48.5734,7.7521,Strasbourg-100km,https://www.strasbourg.eu/actualites,https://www.visitstrasbourg.fr
+Nîmes,30000,43.8367,4.3601,Nimes-100km,https://www.nimes.fr/actualites,https://www.nimes-tourisme.com
+Montpellier,34000,43.6108,3.8767,Montpellier-100km,https://www.montpellier.fr/actualites,https://www.montpellier-tourisme.fr
+Perpignan,66000,42.6986,2.8956,Perpignan-100km,https://www.mairie-perpignan.fr/actualites,https://www.perpignan-tourisme.com
+Toulouse,31000,43.6047,1.4442,Toulouse-100km,https://www.toulouse.fr/actualites,https://www.toulouse-visit.com
+Paris,75001,48.8566,2.3522,Paris-100km,https://www.paris.fr/pages/actualites,https://parisjetaime.com
+Grenoble,38000,45.1885,5.7245,Grenoble-100km,https://www.grenoble.fr/actualites,https://www.grenoble-tourisme.com
