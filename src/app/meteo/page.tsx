@@ -14,12 +14,11 @@ export default function MeteoPage() {
     const [villes, setVilles] = useState<any[]>([]);
     const [villeSelectionnee, setVilleSelectionnee] = useState<any>(null);
 
-    // Charger la liste des villes depuis Supabase au chargement de la page
+    // Charger la liste des villes depuis la table 'cities' de Supabase au chargement de la page
     useEffect(() => {
         async function chargerVilles() {
             try {
-                // Remplacez 'villes' par le nom exact de votre table dans Supabase si nécessaire
-                const { data, error } = await supabase.from('villes').select('*');
+                const { data, error } = await supabase.from('cities').select('*');
                 
                 if (error) {
                     console.error("Erreur Supabase:", error);
@@ -43,9 +42,9 @@ export default function MeteoPage() {
             return;
         }
 
-        setResultat(`Chargement de la météo pour ${villeSelectionnee.nom || 'la ville'}...`);
+        setResultat(`Chargement de la météo pour ${villeSelectionnee.name || villeSelectionnee.nom || 'la ville'}...`);
 
-        // Récupération des coordonnées de la ville sélectionnée dans Supabase
+        // Récupération des coordonnées de la ville sélectionnée
         const latitude = villeSelectionnee.latitude;
         const longitude = villeSelectionnee.longitude;
 
@@ -56,7 +55,8 @@ export default function MeteoPage() {
             if (data && data.current_weather) {
                 const temperature = data.current_weather.temperature;
                 const vent = data.current_weather.windspeed;
-                setResultat(`Météo à ${villeSelectionnee.nom} : ${temperature}°C (Vent : ${vent} km/h)`);
+                const nomVille = villeSelectionnee.name || villeSelectionnee.nom || 'Ville';
+                setResultat(`Météo à ${nomVille} : ${temperature}°C (Vent : ${vent} km/h)`);
             } else {
                 setResultat("Impossible de récupérer la météo.");
             }
@@ -82,7 +82,7 @@ export default function MeteoPage() {
                 >
                     {villes.map((ville) => (
                         <option key={ville.id} value={ville.id}>
-                            {ville.nom}
+                            {ville.name || ville.nom || `Ville ${ville.id}`}
                         </option>
                     ))}
                 </select>
