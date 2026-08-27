@@ -1,0 +1,47 @@
+HTML
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Projet Météo - BTV Admin</title>
+</head>
+<body>
+
+    <h1>Application Météo BTV</h1>
+
+    <!-- Bouton cliquable -->
+    <button id="btn-meteo" onclick="recupererMeteo()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Voir la météo</button>
+    
+    <!-- Zone d'affichage du résultat -->
+    <div id="resultat-meteo" style="margin-top: 15px; font-weight: bold; font-size: 18px;"></div>
+
+    <!-- Code logique JavaScript -->
+    <script>
+        async function recupererMeteo() {
+            const resultatDiv = document.getElementById('resultat-meteo');
+            resultatDiv.innerHTML = "Chargement de la météo...";
+
+            // Coordonnées (par exemple pour Salernes / Provence)
+            const latitude = 43.5658; 
+            const longitude = 6.2239;
+
+            try {
+                const reponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+                const data = await reponse.json();
+                
+                if (data && data.current_weather) {
+                    const temperature = data.current_weather.temperature;
+                    const vent = data.current_weather.windspeed;
+                    resultatDiv.innerHTML = `Température actuelle : ${temperature}°C (Vent : ${vent} km/h)`;
+                } else {
+                    resultatDiv.innerHTML = "Impossible de récupérer la météo.";
+                }
+            } catch (erreur) {
+                resultatDiv.innerHTML = "Erreur de connexion au service météo.";
+                console.error(erreur);
+            }
+        }
+    </script>
+
+</body>
+</html>
