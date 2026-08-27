@@ -21,8 +21,8 @@ HTML
             const resultatDiv = document.getElementById('resultat-meteo');
             resultatDiv.innerHTML = "Chargement de la météo...";
 
-            // Coordonnées (par exemple pour Salernes / Provence)
-            const latitude = 43.5658; 
+            // Coordonnées (Salernes / Provence)
+            const latitude = 43.5658;
             const longitude = 6.2239;
 
             try {
