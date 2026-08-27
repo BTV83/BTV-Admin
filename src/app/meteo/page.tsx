@@ -1,17 +1,53 @@
 TypeScript
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialisation de Supabase
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function MeteoPage() {
-    const [resultat, setResultat] = useState("Cliquez sur le bouton pour voir la météo.");
+    const [resultat, setResultat] = useState("Sélectionnez une ville pour voir la météo.");
+    const [villes, setVilles] = useState<any[]>([]);
+    const [villeSelectionnee, setVilleSelectionnee] = useState<any>(null);
+
+    // Charger la liste des villes depuis Supabase au chargement de la page
+    useEffect(() => {
+        async function chargerVilles() {
+            try {
+                // Remplacez 'villes' par le nom exact de votre table dans Supabase si nécessaire
+                const { data, error } = await supabase.from('villes').select('*');
+                
+                if (error) {
+                    console.error("Erreur Supabase:", error);
+                } else if (data) {
+                    setVilles(data);
+                    if (data.length > 0) {
+                        setVilleSelectionnee(data[0]); // Sélectionne la première ville par défaut
+                    }
+                }
+            } catch (err) {
+                console.error("Erreur de chargement des villes", err);
+            }
+        }
+
+        chargerVilles();
+    }, []);
 
     async function recupererMeteo() {
-        setResultat("Chargement de la météo...");
+        if (!villeSelectionnee) {
+            setResultat("Aucune ville sélectionnée.");
+            return;
+        }
 
-        // Coordonnées de Salernes par défaut
-        const latitude = 43.5658;
-        const longitude = 6.2239;
+        setResultat(`Chargement de la météo pour ${villeSelectionnee.nom || 'la ville'}...`);
+
+        // Récupération des coordonnées de la ville sélectionnée dans Supabase
+        const latitude = villeSelectionnee.latitude;
+        const longitude = villeSelectionnee.longitude;
 
         try {
             const reponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
@@ -20,7 +56,7 @@ export default function MeteoPage() {
             if (data && data.current_weather) {
                 const temperature = data.current_weather.temperature;
                 const vent = data.current_weather.windspeed;
-                setResultat(`Température actuelle : ${temperature}°C (Vent : ${vent} km/h)`);
+                setResultat(`Météo à ${villeSelectionnee.nom} : ${temperature}°C (Vent : ${vent} km/h)`);
             } else {
                 setResultat("Impossible de récupérer la météo.");
             }
@@ -32,7 +68,25 @@ export default function MeteoPage() {
 
     return (
         <main style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-            <h1>Application Météo BTV (Admin)</h1>
+            <h1>Application Météo BTV (Connectée à Supabase)</h1>
+
+            {/* Menu déroulant pour choisir une ville de la base de données */}
+            <div style={{ margin: '20px 0' }}>
+                <label style={{ marginRight: '10px', fontWeight: 'bold' }}>Choisissez une ville :</label>
+                <select 
+                    style={{ padding: '8px', fontSize: '16px' }}
+                    onChange={(e) => {
+                        const villeTrouvee = villes.find(v => v.id == e.target.value);
+                        setVilleSelectionnee(villeTrouvee);
+                    }}
+                >
+                    {villes.map((ville) => (
+                        <option key={ville.id} value={ville.id}>
+                            {ville.nom}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             <button 
                 onClick={recupererMeteo} 
