@@ -9,6 +9,7 @@ const NAV: { href: string; label: string; permission?: Permission }[] = [
   { href: "/users", label: "Utilisateurs", permission: "manage_users" },
   { href: "/content", label: "Contenus", permission: "moderate" },
   { href: "/cities", label: "Communes", permission: "manage_cities" },
+  { href: "/meteo", label: "Météo" },
   { href: "/audit", label: "Journal", permission: "view_audit" },
   { href: "/team", label: "Équipe", permission: "manage_team" },
 ];
